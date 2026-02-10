@@ -5,11 +5,8 @@ def overlapping_interval(arr):
         if sorted_arr[i][1] >= sorted_arr[i+1][0]:
             if sorted_arr[i][1] < sorted_arr[i+1][1]:
                 sorted_arr[i][1] = sorted_arr[i+1][1]
-                sorted_arr.pop(i+1)
-                i -= 1
-            else:
-                sorted_arr.pop(i+1)
-                i -= 1
+            sorted_arr.pop(i+1)
+            i -= 1
         i += 1
     return sorted_arr
 
