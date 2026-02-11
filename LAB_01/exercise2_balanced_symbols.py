@@ -1,15 +1,15 @@
 #exercise2
 
-def is_balanced(s):
+def is_balanced(expression):
     stack = []
     pairs = {')': '(', ']': '[', '}': '{'}
 
 
-    for ch in s:
-        if ch in pairs.values():
-            stack.append(ch)
-        elif ch in pairs:
-            if not stack or stack.pop() != pairs[ch]:
+    for char in expression:
+        if char in pairs.values():
+            stack.append(char)
+        elif char in pairs:
+            if not stack or stack.pop() != pairs[char]:
                 return False
 
    
