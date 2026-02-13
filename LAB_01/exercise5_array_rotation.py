@@ -38,12 +38,12 @@ def rotate_reverse(vect, k):
 
     n = len(vect)
     if n == 0 or k == 0:
-        return vect.copy()
+        return vect
     k = k % n
     reverse_segment(vect, 0, n-1)
     reverse_segment(vect, 0, k-1)
     reverse_segment(vect, k, n-1)
-    return vect.copy()
+    return vect
 
 # test
 if __name__ == "__main__":
