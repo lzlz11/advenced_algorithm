@@ -94,3 +94,37 @@ if __name__ == "__main__":
     a_suggestions = findFriendSuggestions("User A", all_user_friends)
     print(f"User A friend suggestions : {sorted(a_suggestions)}")
     assert a_suggestions == {106, 107, 108}, "Suggestions error"
+
+
+
+
+    print("Start Boundary Testing")
+    # empty set test
+    empty_set = set()
+    assert Intersection(empty_set, empty_set) == set(), "Empty Intersection error"
+    assert Union(empty_set, empty_set) == set(), "Empty Union error"
+    assert Difference(empty_set, empty_set) == set(), "Empty Difference error"
+    assert friendCoef(empty_set, empty_set) == 0.0, "Empty friendCoef error"
+    print("✔ Empty set test passed")
+
+
+    # no union test
+    set_x = {1,2}
+    set_y = {3,4}
+    assert Intersection(set_x, set_y) == set(), "No Intersection error"
+    assert friendCoef(set_x, set_y) == 0.0, "No friendCoef error"
+    print("✔ No common friends test passed")
+
+    # unknownUser test
+    try:
+        findFriendSuggestions("UnknownUser", all_user_friends)
+        assert False, "Should raise KeyError"
+    except KeyError:
+        print("✔ Unknown user test passed")
+
+
+    # user no friend test
+    all_user_friends[999] = set()
+    suggestions = findFriendSuggestions(999, all_user_friends)
+    assert suggestions == set(), "User with no friends error"
+    print("✔ User with no friends test passed")
