@@ -157,3 +157,83 @@ def find_peak_hour(likes: List[int], left: int, right: int) -> int:
     
 
 
+
+
+    
+
+# testcases
+post1 = Post(
+    post_id="post1",
+    user_id="user1",
+    content_preview="Post 1 content",
+    timestamp=datetime(2026, 3, 20, 10, 0),
+    likes=100,
+    comments=10,
+    shares=10
+)
+
+# Post2
+post2 = Post(
+    post_id="post2",
+    user_id="user2",
+    content_preview="Post 2 content",
+    timestamp=datetime(2026, 3, 20, 11, 0),
+    likes=160,
+    comments=50,
+    shares=20
+)
+
+# Post3
+post3 = Post(
+    post_id="post3",
+    user_id="user3",
+    content_preview="Post 3 content",
+    timestamp=datetime(2026, 3, 20, 12, 0),
+    likes=70,
+    comments=5,
+    shares=5
+)
+
+# Post4
+post4 = Post(
+    post_id="post4",
+    user_id="user4",
+    content_preview="Post 4 content",
+    timestamp=datetime(2026, 3, 20, 13, 0),
+    likes=160,
+    comments=30,
+    shares=20
+)
+
+posts = [post1, post2, post3, post4]
+
+# 2. tests for les fonctions
+print("=== test results ===")
+
+# max_engagement
+max_score = max_engagement(posts, 0, 3)
+print(f"max_engagement result: {max_score} (excepted: 320)")
+
+# sum_engagement
+total_score = sum_engagement(posts, 0, 3)
+print(f"sum_engagement result: {total_score} (excepted: 845)")
+
+# average_engagement
+avg_score = average_engagement(posts, 0, 3)
+print(f"average_engagement result: {avg_score} (excepted: 211.25)")
+
+# count_above_threshold 
+count_above = count_above_threshold(posts, 0, 3, 200)
+print(f"count_above_threshold  result: {count_above} (excepted: 2)")
+
+# merge_sort_by_engagement 
+merge_sort_by_engagement(posts, 0, 3)
+sorted_scores = [post.engagement_score() for post in posts]
+print(f"merge_sort_by_engagement result: {sorted_scores} (excepted: [95, 150, 280, 320])")
+
+# find_peak_hour 
+hourly_likes = [5, 8, 12, 25, 30, 28, 15, 10] 
+hourly_likes += [0] * 16  
+peak_index = find_peak_hour(hourly_likes, 0, 23)
+print(f"find_peak_hour result: {peak_index} (excepted: 4 hours)")
+
