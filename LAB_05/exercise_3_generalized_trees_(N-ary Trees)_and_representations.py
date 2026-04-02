@@ -3,7 +3,6 @@ from collections import deque
 from dataclasses import dataclass, field
 from typing import List, Optional, Tuple
 
-
 @dataclass
 class BinaryCategoryNode:
     category_id: int
