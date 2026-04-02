@@ -111,6 +111,18 @@ def find_path_to_root(target_id, node):
         current = current.parent
     return path
 
+
+def find_category_by_name(name, node):
+    if node == None:
+        return None
+    if node.name == name:
+        return node
+    left = find_category_by_name(name, node.left)
+    if left:
+        return left
+    return find_category_by_name(name, node.right)
+
+
 # Find the lowest common ancestor of two nodes.
 def lowest_common_ancestor(id1, id2, node):
     path1 = find_path_to_root(id1, node)
@@ -125,5 +137,118 @@ def lowest_common_ancestor(id1, id2, node):
         i = i - 1
         j = j - 1
     if lca != None:
-        return find_category(lca, node)
+        return find_category_by_name(lca, node)
     return None
+
+
+
+
+# Test cases
+# creat tree
+tech = CategoryNode(1, "Technology", 150)
+prog = CategoryNode(2, "Programming", 85)
+design = CategoryNode(3, "Design", 65)
+python = CategoryNode(4, "Python", 42)
+java = CategoryNode(5, "Java", 30)
+django = CategoryNode(6, "Django", 18)
+flask = CategoryNode(7, "Flask", 12)
+ux = CategoryNode(8, "UI/UX", 38)
+graphics = CategoryNode(9, "Graphics", 22)
+
+tech.left = prog
+tech.right = design
+prog.left = python
+prog.right = java
+python.left = django
+python.right = flask
+design.left = ux
+design.right = graphics
+
+prog.parent = tech
+design.parent = tech
+python.parent = prog
+java.parent = prog
+django.parent = python
+flask.parent = python
+ux.parent = design
+graphics.parent = design
+
+root = tech
+
+#  calculate_height
+print("test calculate_height:")
+result = calculate_height(root)
+print(f"  height of tree: {result}")
+assert result == 3, f"exceped 3, result: {result}"
+
+#  find_category
+print("test find_category:")
+node = find_category(4, root)
+print(f"  find node which ID = 4: {node.name if node else None}")
+assert node is not None and node.name == "Python", "python"
+print("  test find_category passed\n")
+
+# test calculate_node_height
+print("test calculate_node_height:")
+result = calculate_node_height(root, 5)  # Java
+print(f"  Java node height: {result}")
+assert result == 0, f"excepted 0, result: {result}"
+print("  calculate_node_height passed\n")
+
+# test count_nodes
+print("test count_nodes:")
+result = count_nodes(root)
+print(f"  total nodes: {result}")
+assert result == 9, f"excepted 9, result {result}"
+print("  passed\n")
+
+# test count_leaves
+print("test count_leaves:")
+result = count_leaves(root)
+print(f"  node leaves: {result}")
+assert result == 5, f"excepted 5, result {result}"
+print("  passed\n")
+
+# test is_balanced
+print("test is_balanced:")
+result = is_balanced(root)
+print(f"  tree is balanced: {result}")
+assert result == True, "tree should be balanced"
+print("  passed\n")
+
+# test is_full_binary_tree
+print("test is_full_binary_tree:")
+result = is_full_binary_tree(root)
+print(f"  Is full binary tree: {result}")
+assert result == True, "false"
+print("  passed\n")
+
+# test is_perfect_binary_tree
+print("test is_perfect_binary_tree:")
+result = is_perfect_binary_tree(root)
+print(f"  Is perfect binary tree: {result}")
+assert result == False, "trees should not perfect"
+print("  passed\n")
+
+# test is_complete_binary_tree
+print("test is_complete_binary_tree:")
+result = is_complete_binary_tree(root)
+print(f"  Tree is complete binary tree: {result}")
+assert result == False, "false"
+print("  passed\n")
+
+# test find_path_to_root
+print("test find_path_to_root:")
+result = find_path_to_root(6, root)  # Django
+print(f"  Django path to root: {result}")
+expected = ["Django", "Python", "Programming", "Technology"]
+assert result == expected, f"excepted {expected}, result {result}"
+print("  passed\n")
+
+# test lowest_common_ancestor
+print("test lowest_common_ancestor:")
+lca_node = lowest_common_ancestor(6, 5, root)  # Django and Java
+result = lca_node.name if lca_node else None
+print(f"  Django and Java lca: {result}")
+assert result == "Programming", f"excepted Programming, result {result}"
+print("  passed\n")
