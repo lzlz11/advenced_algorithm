@@ -44,7 +44,7 @@ class SocialNetwork:
 
             for neighbor in self.adjacency_list[user]:
                 if neighbor not in distances:
-                    distances[neighbor] = distances + 1
+                    distances[neighbor] = distances[user] + 1
                     queue.append(neighbor)
         
         return distances
@@ -143,3 +143,92 @@ class SocialNetwork:
         result = [user for user, count in sorted_candidates[:max_recommendations]]
     
         return result
+    
+
+
+    # TEST CASES
+
+
+sn = SocialNetwork()
+
+# Add users
+sn.add_user("Alice")
+sn.add_user("Bob")
+sn.add_user("Charlie")
+sn.add_user("David")
+sn.add_user("Eve")
+sn.add_user("Frank")
+sn.add_user("Grace")
+
+# add friendships
+sn.add_friendship("Alice", "Bob")
+sn.add_friendship("Alice", "Charlie")
+sn.add_friendship("Bob", "David")
+sn.add_friendship("Charlie", "David")
+sn.add_friendship("David", "Eve")
+sn.add_friendship("Eve", "Frank")
+sn.add_friendship("Frank", "Grace")
+
+# test add_user  add_friendship
+print("=== test structure ===")
+print(sn.adjacency_list)
+
+# test bfs
+print("\n=== test bfs ===")
+print(sn.bfs("Alice"))
+
+print("\n=== test bfs_with_distances ===")
+print(sn.bfs_with_distances("Alice"))
+
+# test shortest_path
+print("\n=== test shortest_path ===")
+print(sn.shortest_path("Alice", "Eve"))
+print(sn.shortest_path("Alice", "Grace"))
+print(sn.shortest_path("Alice", "Alice"))
+
+# test degrees_of_separation
+print("\n=== test degrees_of_separation ===")
+print(sn.degrees_of_separation("Alice", "Eve"))
+print(sn.degrees_of_separation("Alice", "Grace"))
+print(sn.degrees_of_separation("Alice", "NotFound"))
+
+# test friends_within_k_hops
+print("\n=== test friends_within_k_hops ===")
+print(sn.friends_within_k_hops("Alice", 1))
+print(sn.friends_within_k_hops("Alice", 2))
+print(sn.friends_within_k_hops("Alice", 3))
+
+# test compute_average_degrees_of_separation
+print("\n=== test compute_average_degrees_of_separation ===")
+print(sn.compute_average_degrees_of_separation())
+
+# test get_distance_distribution
+print("\n=== test get_distance_distribution ===")
+print(sn.get_distance_distribution("Alice"))
+
+# test recommend_friends
+print("\n=== test recommend_friends ===")
+print(sn.recommend_friends("Alice", 5))
+
+# single user network
+print("\n=== test single user network ===")
+sn2 = SocialNetwork()
+sn2.add_user("Solo")
+print(sn2.bfs("Solo"))
+print(sn2.bfs_with_distances("Solo"))
+print(sn2.shortest_path("Solo", "Solo"))
+print(sn2.degrees_of_separation("Solo", "Solo"))
+print(sn2.friends_within_k_hops("Solo", 1))
+print(sn2.compute_average_degrees_of_separation())
+print(sn2.get_distance_distribution("Solo"))
+print(sn2.recommend_friends("Solo"))
+
+# No network connection
+print("\n===  test No network connection ===")
+sn3 = SocialNetwork()
+sn3.add_user("User1")
+sn3.add_user("User2")
+sn3.add_user("User3")
+print(sn3.shortest_path("User1", "User2"))
+print(sn3.degrees_of_separation("User1", "User2"))
+print(sn3.compute_average_degrees_of_separation())
