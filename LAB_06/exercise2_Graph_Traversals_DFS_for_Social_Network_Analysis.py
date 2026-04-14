@@ -119,7 +119,6 @@ class SocialGraph:
             visited.append(user)
             user_id = self.get_user_id(user)
             for i in range(len(self.matrix)):
-                # Only follow OUTGOING edges (directed)
                 if self.matrix[user_id][i] and self.user_in_matrix[i] not in visited:
                     dfs_finish(self.user_in_matrix[i])
             finish_stack.append(user)
