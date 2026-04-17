@@ -65,8 +65,8 @@ if __name__ == "__main__":
     print(f"bottom left(0,50,50,50): {count_points_in_region(points, {'x':0,'y':50,'width':50,'height':50})} ")
     print(f"bottmo left(50,50,50,50): {count_points_in_region(points, {'x':50,'y':50,'width':50,'height':50})} ")
     
-    # Level 2: 左上角的25x25子区域
-    print(f"\ntop left25x25: {count_points_in_region(points, {'x':0,'y':0,'width':25,'height':25})} 点")
+    # Level 2
+    print(f"\ntop left25x25: {count_points_in_region(points, {'x':0,'y':0,'width':25,'height':25})} ")
     
     print("\ntest find_dense_regions:")
     dense = find_dense_regions(points, 0, 0, 100, 100, 10, 0.012)
