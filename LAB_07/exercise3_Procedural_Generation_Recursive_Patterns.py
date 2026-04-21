@@ -7,14 +7,15 @@ import matplotlib.colors as mcolors
 import numpy as np
 
 
-def mid_point_displacement(roughness, depth, grid):
+def mid_point_displacement(roughness, depth, grid, count):
     if depth == 0:
         return grid
     midpoint = ((grid[0][0] + grid[-1][0]) / 2, (grid[0][1] + grid[-1][1]) / 2)
     middle = len(grid)//2
+    count[0] += 1
     grid[middle][1] = midpoint[1] + roughness * (random.randint(-100,100)/100)
-    mid_point_displacement(roughness, depth - 1, grid[:middle+1])
-    mid_point_displacement(roughness, depth - 1, grid[middle:])
+    mid_point_displacement(roughness, depth - 1, grid[:middle+1], count)
+    mid_point_displacement(roughness, depth - 1, grid[middle:], count)
 
     return grid
 
@@ -139,15 +140,10 @@ def detect_artifacts(grid, sensibility):
     return suspicious
 
 
-
-
-point = [5,7]
-point[1] = 8
-
-
-grid1d = create1dgrid(7)
-
-grid1d = mid_point_displacement(0, 9, grid1d)
+grid1d = create1dgrid(8)
+count = [0]
+grid1d = mid_point_displacement(10, 10, grid1d, count)
+print(count)
 t.teleport(grid1d[0][0],0)
 for point in grid1d:
     t.goto(point)
