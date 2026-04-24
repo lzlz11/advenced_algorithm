@@ -1,4 +1,6 @@
 import math
+import random
+import time
 from typing import List, Optional, Tuple
 
 class HeapEntry:
@@ -176,3 +178,96 @@ def get_level_order(heap: TrendingHeap) -> List[List[HeapEntry]]:
         level += 1
     
     return result
+
+
+# test cases
+
+if __name__ == "__main__":
+   # random.seed(42)
+    
+    
+    # 1. Create initial post
+    print("\n1. Start with 100 posts...")
+    heap = TrendingHeap()
+    initialize(heap)
+    
+    for i in range(100):
+        post_id = f"post_{i:03d}"
+        likes = random.randint(0, 1000)
+        timestamp = i
+        push(heap, post_id, likes, timestamp)
+    
+    print(f"    {size(heap)} posts have been created.")
+    
+    # 显示初始top 5
+    print("\n--- Initial top 5 ---")
+    top_5 = get_top_k(heap, 5)
+    for idx, post in enumerate(top_5, 1):
+        print(f"  {idx}. {post.post_id}: {post.likes} likes")
+    
+    # 2. 执行10,000次点赞更新
+    print("\n2. Perform 10,000 like updates ...")
+    
+    # 获取所有帖子ID列表
+    post_ids = [f"post_{i:03d}" for i in range(100)]
+    
+    # 记录时间
+    update_times = []
+    query_times = []
+    
+    total_updates = 10000
+    query_interval = 1000
+    
+    for i in range(1, total_updates + 1):
+        post_id = random.choice(post_ids)
+        
+        increment = random.randint(1, 50)
+        
+        index = find_index(heap.heap, post_id)
+        if index != -1:
+            current_likes = heap.heap[index].likes
+            new_likes = current_likes + increment
+            new_timestamp = i
+            
+            update_start = time.time()
+            update_likes(heap, post_id, new_likes, new_timestamp)
+            update_time = time.time() - update_start
+            update_times.append(update_time)
+        
+        # 每1000次更新后查询并显示top 5
+        if i % query_interval == 0:
+            query_start = time.time()
+            
+            print(f"\n--- the {i // query_interval}times query (already  updated {i} times) ---")
+            top_5 = get_top_k(heap, 5)
+            print("Top 5 Popular posts:")
+            for idx, post in enumerate(top_5, 1):
+                print(f"  {idx}. {post.post_id}: {post.likes} likes")
+            
+            query_time = time.time() - query_start
+            query_times.append(query_time)
+            
+            # 显示进度
+            progress = (i / total_updates) * 100
+            print(f"  progress rate: {progress:.1f}% ({i}/{total_updates})")
+    
+
+    # 3. 显示统计信息
+    avg_update_time = sum(update_times) / len(update_times) if update_times else 0
+    avg_query_time = sum(query_times) / len(query_times) if query_times else 0
+    
+    print(f"  - Total number of updates: {total_updates}")
+    print(f"  - Total number of queries: {len(query_times)}")
+    print(f"\nAverage time:")
+    print(f"  - {avg_update_time*1000:.4f} ")
+    print(f"  -  {avg_query_time*1000:.4f} ")
+    
+    total_time = sum(update_times) + sum(query_times)
+    print(f"  - Total Time: {total_time:.4f} s")
+    print(f"  - update: {total_updates/total_time:.2f} times/s")
+    print(f"  - inquiry: {len(query_times)/total_time:.2f} times/s")
+    
+
+    print(f"  - Final number of posts: {size(heap)}")
+    print(f"  - Height of the pile: {get_height(heap)}")
+    
