@@ -1,3 +1,5 @@
+from cmath import inf
+
 from exo3_usernames import usernames
 import random
 
@@ -161,7 +163,148 @@ class trie:
 
         _print_node(self.root)
 
+class segment_tree_node:
+    def __init__(self, value, index_min, index_max, parent = None):
+        self.value = value
+        self.index_min = index_min
+        self.index_max = index_max
+        self.left = None
+        self.right = None
+        self.parent = parent
 
+    def add_child(self, node):
+        if self.left is None:
+            self.left = node
+        else:
+            self.right = node
+
+    def __str__(self):
+        return f"[{self.index_min}:{self.index_max}] value: {self.value}, left : [{self.left.index_min if not self.left is None else None},{self.left.index_max if not self.left is None else None}] right: [{self.right.index_min if not self.right is None else None},{self.right.index_max if not self.right is None else None}]"
+
+class segment_tree:
+    def __init__(self):
+        self.root = None
+
+    def build(self,array):
+        index_min = 0
+        index_max = len(array)-1
+        node_parent = segment_tree_node(sum(array), index_min, index_max)
+        self.root = node_parent
+        difference_min_max = (index_max - index_min)//2
+        node_to_create = [(node_parent, index_min + difference_min_max+1, index_max),
+                          (node_parent, index_min, index_min + difference_min_max)]
+        while node_to_create:
+            parent_node, index_min, index_max = node_to_create.pop(-1)
+            if index_min == index_max:
+                parent_node.add_child(segment_tree_node(array[index_min] ,index_min, index_max, node_parent))
+            else:
+                difference_min_max = (index_max - index_min) // 2
+                new_node = segment_tree_node(sum(array[index_min:index_max+1]), index_min, index_max, node_parent)
+                parent_node.add_child(new_node)
+                node_to_create.append((new_node, index_min + difference_min_max+1, index_max))
+                node_to_create.append((new_node, index_min, index_min + difference_min_max))
+
+    # this is an AI generated function that prints the tree in a neat way in the terminal.
+    def print_tree(self):
+        def print_(node, prefix="", is_left=False):
+            if node is None:
+                return
+            connector = "├── " if is_left else "└── "
+            range_str = f"[{node.index_min}..{node.index_max}]"
+            print(prefix + connector + f"{range_str} val={node.value}")
+
+            child_prefix = prefix + ("│   " if is_left else "    ")
+            print_(node.left, child_prefix, is_left=True)
+            print_(node.right, child_prefix, is_left=False)
+        print_(self.root)
+
+    def query(self, l, r, node = None):
+        if node is None:
+            node = self.root
+
+        if node.index_max < l or node.index_min > r:
+            return 0
+
+        if l <= node.index_min and node.index_max <= r:
+            return node.value
+
+        return self.query(l, r, node.left) + self.query(l, r, node.right)
+
+    def get_range_max(self,l,r):
+        node = self.root
+        maximum = 0
+        node_to_explore = [node.left,node.right]
+        while node_to_explore:
+            node = node_to_explore.pop(0)
+            if node.index_max == node.index_min and node.index_max <= r and node.index_min >= l:
+                if node.value > maximum:
+                    maximum = node.value
+            elif l <= node.index_max and node.index_min <= r:
+                node_to_explore.append(node.left)
+                node_to_explore.append(node.right)
+        return maximum
+
+    def get_range_min(self,l,r):
+        node = self.root
+        minimum = inf
+        node_to_explore = [node.left,node.right]
+        while node_to_explore:
+            node = node_to_explore.pop(0)
+            if node.index_max == node.index_min and node.index_max <= r and node.index_min >= l:
+                if node.value < minimum:
+                    minimum = node.value
+            elif l <= node.index_max and node.index_min <= r:
+                node_to_explore.append(node.left)
+                node_to_explore.append(node.right)
+        return minimum
+
+    def get_tree_size(self):
+        nbNodes = 1
+        node = self.root
+        node_to_explore = [node.left,node.right]
+        while node_to_explore:
+            node = node_to_explore.pop(0)
+            nbNodes += 1
+            if not node.index_max == node.index_min:
+                node_to_explore.append(node.left)
+                node_to_explore.append(node.right)
+        return nbNodes
+
+    def get_height(self):
+        height_max = 0
+        node = self.root
+        node_to_explore = [(node.left,1),(node.right,1)]
+        while node_to_explore:
+            node, height = node_to_explore.pop(0)
+            if node.index_max == node.index_min:
+                if height > height_max:
+                    height_max = height
+            else:
+                node_to_explore.append((node.left,height+1))
+                node_to_explore.append((node.right,height+1))
+        return height_max
+
+    def get_leaf_values(self):
+        node = self.root
+        leaf_nodes = []
+        node_to_visit = [node.right,node.left]
+        while node_to_visit:
+            node = node_to_visit.pop(-1)
+            if node.index_max == node.index_min:
+                leaf_nodes.append(node.value)
+            else:
+                node_to_visit.append(node.right)
+                node_to_visit.append(node.left)
+        return leaf_nodes
+
+
+
+
+def create_activity_array( days, max_posts):
+    array = []
+    for i in range(days):
+        array.append(random.randint(1,max_posts))
+    return array
 
 print("\n---------- Part A: Trie for autocomplete ----------\n")
 user1 = user("user1")
@@ -208,3 +351,19 @@ print("autocomplete function with ammar: ", trie.autocomplete("ammar"))
 print("count words function: ", trie.count_words())
 print("get height function: ", trie.get_height())
 print("get total nodes function: ", trie.get_total_nodes())
+
+
+print("\n---------- Part B: Segment Tree for Activity Range Queries ----------\n")
+
+test_array = create_activity_array(50,1000)
+print(test_array)
+segmented_tree = segment_tree()
+segmented_tree.build(test_array)
+segmented_tree.print_tree()
+
+print("query for [43,50]: ",segmented_tree.query(43,50))
+print("maximum for [11,14]: ",segmented_tree.get_range_max(11,14))
+print("minimum for [11,14]: ",segmented_tree.get_range_min(11,14))
+print("number of nodes in the tree: ", segmented_tree.get_tree_size())
+print("height of the tree: ", segmented_tree.get_height())
+print("leaves nodes: ", segmented_tree.get_leaf_values())
