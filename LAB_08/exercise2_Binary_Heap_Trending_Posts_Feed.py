@@ -199,19 +199,19 @@ if __name__ == "__main__":
     
     print(f"    {size(heap)} posts have been created.")
     
-    # 显示初始top 5
+    # Display initial top 5
     print("\n--- Initial top 5 ---")
     top_5 = get_top_k(heap, 5)
     for idx, post in enumerate(top_5, 1):
         print(f"  {idx}. {post.post_id}: {post.likes} likes")
     
-    # 2. 执行10,000次点赞更新
+    # 2. Perform 10,000 like updates
     print("\n2. Perform 10,000 like updates ...")
     
-    # 获取所有帖子ID列表
+    # Get a list of all post IDs
     post_ids = [f"post_{i:03d}" for i in range(100)]
     
-    # 记录时间
+    # Recording time
     update_times = []
     query_times = []
     
@@ -234,7 +234,7 @@ if __name__ == "__main__":
             update_time = time.time() - update_start
             update_times.append(update_time)
         
-        # 每1000次更新后查询并显示top 5
+        # Query and display the top 5 after every 1000 updates.
         if i % query_interval == 0:
             query_start = time.time()
             
@@ -247,12 +247,12 @@ if __name__ == "__main__":
             query_time = time.time() - query_start
             query_times.append(query_time)
             
-            # 显示进度
+            # Display progress
             progress = (i / total_updates) * 100
             print(f"  progress rate: {progress:.1f}% ({i}/{total_updates})")
     
 
-    # 3. 显示统计信息
+    # 3. Display statistics
     avg_update_time = sum(update_times) / len(update_times) if update_times else 0
     avg_query_time = sum(query_times) / len(query_times) if query_times else 0
     
