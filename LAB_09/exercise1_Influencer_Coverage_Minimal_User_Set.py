@@ -7,22 +7,6 @@ from itertools import combinations
 
 def is_valid_coverage(selected_users: list, graph: dict) -> bool:
     """
-    Check whether every node in the graph is either selected
-    or directly adjacent to at least one selected node.
-
-    Parameters
-    ----------
-    selected_users : list
-        List of selected user/node IDs.
-    graph : dict
-        Adjacency list  {node_id: [neighbor_id, ...], ...}.
-        Every node in the graph must appear as a key.
-
-    Returns
-    -------
-    bool
-        True if the selection forms a valid dominating set.
-
     Complexity: O(N + E)
     """
     covered = set()
@@ -50,20 +34,6 @@ def is_valid_coverage(selected_users: list, graph: dict) -> bool:
 
 def find_minimum_coverage(graph: dict) -> tuple:
     """
-    Find the exact minimum dominating set by iterating over subsets
-    in increasing size order and returning as soon as the first valid
-    (and therefore smallest) dominating set is found.
-
-    Parameters
-    ----------
-    graph : dict
-        Adjacency list {node_id: [neighbor_id, ...], ...}.
-
-    Returns
-    -------
-    (int, list)
-        (size_of_minimum_set, list_of_selected_users)
-
     Complexity: O(2^N * (N + E))  — correct for N ≤ 20
     """
     nodes = list(graph.keys())
@@ -111,22 +81,6 @@ def _count_covered(u, uncovered: set, graph: dict) -> int:
 
 def find_fast_coverage(graph: dict) -> tuple:
     """
-    Greedy approximation for the minimum dominating set.
-
-    At each step, select the node that covers the most currently
-    uncovered nodes (itself + uncovered neighbours), until every
-    node is dominated.
-
-    Parameters
-    ----------
-    graph : dict
-        Adjacency list {node_id: [neighbor_id, ...], ...}.
-
-    Returns
-    -------
-    (int, list)
-        (size_of_selected_set, list_of_selected_users)
-
     Complexity: O(N * (N + E))
     """
     uncovered_nodes = set(graph.keys())
@@ -150,3 +104,53 @@ def find_fast_coverage(graph: dict) -> tuple:
 
     size = len(list_of_selected_users)
     return (size, list_of_selected_users)
+
+
+if __name__ == '__main__':
+    print("=" * 60)
+    print("Start running test cases")
+    print("=" * 60)
+
+    # 测试用例1：单个节点图（最简单场景）
+    print("\nTest Case 1: Single Node Graph")
+    graph1 = {1: []}
+    print("is_valid_coverage test：", is_valid_coverage([1], graph1))  # True
+    print("function2：", find_minimum_coverage(graph1))
+    print("function3：", find_fast_coverage(graph1))
+
+    # 测试用例2：两个相连节点
+    print("\nTest Case 2: Two Connected Nodes")
+    graph2 = {1: [2], 2: [1]}
+    print("is_valid_coverage test：", is_valid_coverage([1], graph2))  # True
+    print("function2：", find_minimum_coverage(graph2))
+    print("function3：", find_fast_coverage(graph2))
+
+    # 测试用例3：三个节点链式结构 1-2-3
+    print("\nTest Case 3: Three-Node Chain Structure")
+    graph3 = {1: [2], 2: [1, 3], 3: [2]}
+    print("is_valid_coverage test：", is_valid_coverage([2], graph3))  # True
+    print("function2：", find_minimum_coverage(graph3))
+    print("function3：", find_fast_coverage(graph3))
+
+    # 测试用例4：星型图（中心节点2连接1、3、4）
+    print("\nTest Case 4: Star Graph")
+    graph4 = {1: [2], 2: [1, 3, 4], 3: [2], 4: [2]}
+    print("is_valid_coverage test：", is_valid_coverage([2], graph4))  # True
+    print("function2：", find_minimum_coverage(graph4))
+    print("function3：", find_fast_coverage(graph4))
+
+    # 测试用例5：无效覆盖测试（验证is_valid_coverage）
+    print("\nTest Case 5: Invalid Coverage Verification")
+    graph5 = {1: [2], 2: [1], 3: [2]}
+    print("Select [1], whether to cover all nodes：", is_valid_coverage([1], graph5))  # False（3未覆盖）
+    print("Select [2], whether to cover all nodes：", is_valid_coverage([2], graph5))  # True
+
+    # 测试用例6：四边形图 1-2-3-4-1
+    print("\nTest Case 6: Quadrilateral Graph")
+    graph6 = {1: [2, 4], 2: [1, 3], 3: [2, 4], 4: [1, 3]}
+    print("function2：", find_minimum_coverage(graph6))
+    print("function3：", find_fast_coverage(graph6))
+
+    print("\n" + "=" * 60)
+    print("all finished")
+    print("=" * 60)
