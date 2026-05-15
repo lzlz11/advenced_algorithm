@@ -111,41 +111,41 @@ if __name__ == '__main__':
     print("Start running test cases")
     print("=" * 60)
 
-    # 测试用例1：单个节点图（最简单场景）
+
     print("\nTest Case 1: Single Node Graph")
     graph1 = {1: []}
     print("is_valid_coverage test：", is_valid_coverage([1], graph1))  # True
     print("function2：", find_minimum_coverage(graph1))
     print("function3：", find_fast_coverage(graph1))
 
-    # 测试用例2：两个相连节点
+  
     print("\nTest Case 2: Two Connected Nodes")
     graph2 = {1: [2], 2: [1]}
     print("is_valid_coverage test：", is_valid_coverage([1], graph2))  # True
     print("function2：", find_minimum_coverage(graph2))
     print("function3：", find_fast_coverage(graph2))
 
-    # 测试用例3：三个节点链式结构 1-2-3
+
     print("\nTest Case 3: Three-Node Chain Structure")
     graph3 = {1: [2], 2: [1, 3], 3: [2]}
     print("is_valid_coverage test：", is_valid_coverage([2], graph3))  # True
     print("function2：", find_minimum_coverage(graph3))
     print("function3：", find_fast_coverage(graph3))
 
-    # 测试用例4：星型图（中心节点2连接1、3、4）
+  
     print("\nTest Case 4: Star Graph")
     graph4 = {1: [2], 2: [1, 3, 4], 3: [2], 4: [2]}
     print("is_valid_coverage test：", is_valid_coverage([2], graph4))  # True
     print("function2：", find_minimum_coverage(graph4))
     print("function3：", find_fast_coverage(graph4))
 
-    # 测试用例5：无效覆盖测试（验证is_valid_coverage）
+
     print("\nTest Case 5: Invalid Coverage Verification")
     graph5 = {1: [2], 2: [1], 3: [2]}
     print("Select [1], whether to cover all nodes：", is_valid_coverage([1], graph5))  # False（3未覆盖）
     print("Select [2], whether to cover all nodes：", is_valid_coverage([2], graph5))  # True
 
-    # 测试用例6：四边形图 1-2-3-4-1
+
     print("\nTest Case 6: Quadrilateral Graph")
     graph6 = {1: [2, 4], 2: [1, 3], 3: [2, 4], 4: [1, 3]}
     print("function2：", find_minimum_coverage(graph6))
