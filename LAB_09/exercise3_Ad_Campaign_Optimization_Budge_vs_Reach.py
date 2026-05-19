@@ -7,7 +7,7 @@ influences = [14, 75, 56, 43, 28, 73, 70, 80, 53, 16, 93, 46, 100, 57, 3, 36, 90
 
 test_cost = []
 test_influences = []
-N = 500
+N = 1000
 
 for n in range(N):
     test_cost.append(random.randint(1000, 10000))
@@ -94,14 +94,15 @@ def fast_alternative_strategy(budget, costs, influences):
         result.append(sort[i][2])
         tw += sort[i][0]
     return result[:-1], tw - sort[i-1][0], sum(influences[n] for n in result[:-1])
+budget = 1000000
 
 start = time.time()
-reach = maximize_reach(10000, test_cost, test_influences)
+reach = maximize_reach(budget, test_cost, test_influences)
 end = time.time() - start
 print("knabsack problem with dynamic programming:")
-print("influence maximum:", reach[0], "with these influencers:", reach[1], "with 500 influencers and a budget of 10000, with a time of: ", end, "seconds")
+print("influence maximum:", reach[0], "with these influencers:", reach[1], "with", N ," influencers and a budget of 10000, with a time of: ", end, "seconds")
 start = time.time()
-fast = fast_alternative_strategy(10000, test_cost, test_influences)
+fast = fast_alternative_strategy(budget, test_cost, test_influences)
 end = time.time() - start
 print("knabsack problem with greedy programming:")
 print("selected user: ",fast[0], "for a total of ", fast[2], "influences and ", fast[1], "cost, with a time of:", end, "seconds")
