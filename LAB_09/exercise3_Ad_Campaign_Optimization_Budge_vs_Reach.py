@@ -7,7 +7,7 @@ influences = [14, 75, 56, 43, 28, 73, 70, 80, 53, 16, 93, 46, 100, 57, 3, 36, 90
 
 test_cost = []
 test_influences = []
-N = 1000
+N = 500
 
 for n in range(N):
     test_cost.append(random.randint(1000, 10000))
@@ -94,7 +94,7 @@ def fast_alternative_strategy(budget, costs, influences):
         result.append(sort[i][2])
         tw += sort[i][0]
     return result[:-1], tw - sort[i-1][0], sum(influences[n] for n in result[:-1])
-budget = 1000000
+budget = 10000
 
 start = time.time()
 reach = maximize_reach(budget, test_cost, test_influences)
