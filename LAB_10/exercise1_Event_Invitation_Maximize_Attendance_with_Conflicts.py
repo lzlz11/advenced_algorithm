@@ -82,9 +82,74 @@ def find_max_invitations_greedy(graph):
         to_remove = [best_node] + remaining_graph.neighbors(best_node)
         
         for w in to_remove:
-            remaining_graph.remove_node(w)
-            for x in remaining_graph.all_nodes():
-                remaining_graph.remove_edge(x, w)
+            if w in remaining_graph.adj:
+                # Remove edges from other nodes to w
+                for x in remaining_graph.all_nodes():
+                    if x != w and x in remaining_graph.adj:
+                        remaining_graph.remove_edge(x, w)
+                remaining_graph.remove_node(w)
     
     size = len(list_of_selected_users)
     return (size, list_of_selected_users)
+
+
+class TestGraph:
+    def __init__(self):
+        self.adj = {
+            0: {1}, 
+            1: {0, 2}, 
+            2: {1}
+        }
+
+    def num_nodes(self):
+        return len(self.adj)
+
+    def all_nodes(self):
+        return list(self.adj.keys())
+
+    def neighbors(self, u):
+        return list(self.adj.get(u, set()))
+
+    def __getitem__(self, u):
+        return self.adj.get(u, set())
+
+    def remove_node(self, u):
+        if u in self.adj:
+            del self.adj[u]
+
+    def remove_edge(self, x, w):
+        if x in self.adj and w in self.adj[x]:
+            self.adj[x].discard(w)
+        if w in self.adj and x in self.adj[w]:
+            self.adj[w].discard(x)
+
+
+# ------------------------------
+# Test Cases 
+# ------------------------------
+graph = TestGraph()
+
+# Test is_valid_invitation
+valid_list = [0, 2]  
+invalid_list = [0, 1]  
+print("Test is_valid_invitation - valid list ([0,2]):", is_valid_invitation(valid_list, graph))  
+print("Test is_valid_invitation - invalid list ([0,1]):", is_valid_invitation(invalid_list, graph)) 
+print()
+
+# Test find_max_invitations_exact
+exact_size, exact_set = find_max_invitations_exact(graph)
+print("Test find_max_invitations_exact - size:", exact_size)  
+print("Test find_max_invitations_exact - set:", exact_set)     
+print()
+
+# Test find_max_invitations_greedy
+greedy_size, greedy_set = find_max_invitations_greedy(graph)
+print("Test find_max_invitations_greedy - size:", greedy_size) 
+print("Test find_max_invitations_greedy - set:", greedy_set)  
+print()
+
+# Additional edge cases
+print("=== Additional Test Cases ===")
+print("Empty invitation list:", is_valid_invitation([], graph))
+print("Single node invitation [0]:", is_valid_invitation([0], graph))
+print("Self check (node repeated) [0,0]:", is_valid_invitation([0, 0], graph))
